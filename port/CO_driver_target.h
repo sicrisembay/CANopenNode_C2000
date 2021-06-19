@@ -30,6 +30,7 @@
  * It is included from CO_driver.h, which contains documentation
  * for common definitions below. */
 
+#include <xdc/std.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -41,6 +42,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef xdc_UChar uint8_t;
+typedef xdc_Char  int8_t;
 
 /* Stack configuration override default values.
  * For more information see file CO_config.h. */
