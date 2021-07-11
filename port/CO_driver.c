@@ -32,12 +32,49 @@
 /******************************************************************************/
 void CO_CANsetConfigurationMode(void *CANptr){
     /* Put CAN module in configuration mode */
+    volatile struct ECAN_REGS * ECanRegPtr;
+    union CANMC_REG shadow_canmc;
+    union CANES_REG shadow_canes;
+
+    if(CANptr == NULL) return;
+
+    ECanRegPtr = (volatile struct ECAN_REGS *)CANptr;
+
+    EALLOW;
+    shadow_canmc.all = ECanRegPtr->CANMC.all;
+    shadow_canmc.bit.CCR = 1;
+    ECanRegPtr->CANMC.all = shadow_canmc.all;
+
+    shadow_canes.all = ECanRegPtr->CANES.all;
+    do {
+        shadow_canes.all = ECanRegPtr->CANES.all;
+    } while(shadow_canes.bit.CCE != 1);
+
+    EDIS;
 }
 
 
 /******************************************************************************/
 void CO_CANsetNormalMode(CO_CANmodule_t *CANmodule){
     /* Put CAN module in normal mode */
+    volatile struct ECAN_REGS * ECanRegPtr;
+    union CANMC_REG shadow_canmc;
+    union CANES_REG shadow_canes;
+
+    if(CANmodule == NULL) return;
+
+    ECanRegPtr = (volatile struct ECAN_REGS *)(CANmodule->CANptr);
+
+    EALLOW;
+    shadow_canmc.all = ECanRegPtr->CANMC.all;
+    shadow_canmc.bit.CCR = 0;
+    ECanRegPtr->CANMC.all = shadow_canmc.all;
+
+    shadow_canes.all = ECanRegPtr->CANES.all;
+    do {
+        shadow_canes.all = ECanRegPtr->CANES.all;
+    } while(shadow_canes.bit.CCE != 0);
+    EDIS;
 
     CANmodule->CANnormal = true;
 }
@@ -68,7 +105,7 @@ CO_ReturnError_t CO_CANmodule_init(
     CANmodule->txSize = txSize;
     CANmodule->CANerrorStatus = 0;
     CANmodule->CANnormal = false;
-    CANmodule->useCANrxFilters = (rxSize <= 32U) ? true : false;/* microcontroller dependent */
+    CANmodule->useCANrxFilters = (rxSize <= 32U) ? true : false; /* TODO #1: check as microcontroller dependent */
     CANmodule->bufferInhibitFlag = false;
     CANmodule->firstCANtxMessage = true;
     CANmodule->CANtxCount = 0U;
@@ -86,10 +123,11 @@ CO_ReturnError_t CO_CANmodule_init(
 
 
     /* Configure CAN module registers */
+    /// TODO #2
 
 
     /* Configure CAN timing */
-
+    /// TODO #3
 
     /* Configure CAN module hardware filters */
     if(CANmodule->useCANrxFilters){
@@ -97,15 +135,20 @@ CO_ReturnError_t CO_CANmodule_init(
         /* CO_CANrxBufferInit() functions, called by separate CANopen */
         /* init functions. */
         /* Configure all masks so, that received message must match filter */
+
+        /// TODO #4
     }
     else{
         /* CAN module filters are not used, all messages with standard 11-bit */
         /* identifier will be received */
         /* Configure mask 0 so, that all messages with standard identifier are accepted */
+
+        /// TODO #5
     }
 
 
     /* configure CAN interrupt registers */
+    /// TODO #6
 
 
     return CO_ERROR_NO;

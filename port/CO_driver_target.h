@@ -34,6 +34,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "DSP2833x_Device.h"
 
 #ifdef CO_DRIVER_CUSTOM
 #include "CO_driver_custom.h"
@@ -48,7 +49,7 @@ typedef xdc_Char  int8_t;
 
 /* Stack configuration override default values.
  * For more information see file CO_config.h. */
-
+#define CO_CONFIG_LEDS  0
 
 /* Basic definitions. If big endian, CO_SWAP_xx macros must swap bytes. */
 #define CO_LITTLE_ENDIAN
