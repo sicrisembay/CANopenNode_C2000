@@ -25,6 +25,7 @@
 #define OD_STATUS_BITS NULL
 
 static Task_Handle taskHdl_CO;
+static Task_Handle taskHdl_CO_timer;
 static CO_t * CO = NULL;
 static void * CANptr = NULL; /* CAN module address */
 
@@ -54,6 +55,9 @@ Void taskCO_timer(UArg a0, UArg a1)
 
 Void taskCO_main(UArg a0, UArg a1)
 {
+    Error_Block eb;
+    Task_Params tskParam;
+
     CO_ReturnError_t err;
     CO_NMT_reset_cmd_t reset = CO_RESET_NOT;
     uint32_t heapMemoryUsed;
@@ -79,7 +83,6 @@ Void taskCO_main(UArg a0, UArg a1)
 
         /* Enter CAN configuration. */
         CO_CANsetConfigurationMode(CANptr);
-        CO_CANmodule_disable(CO->CANmodule);
 
         /* Initialize CANopen */
         err = CO_CANinit(CO, CANptr, pendingBitRate);
@@ -129,7 +132,20 @@ Void taskCO_main(UArg a0, UArg a1)
             BIOS_exit(0);
         }
 
-        /* Configure Timer interrupt function for execution every 1 millisecond */
+        /*
+         * Configure Timer Task for execution every 1 millisecond
+         * Note: taskCO_timer priority must be higher than taskCO_main priority
+         */
+        Error_init(&eb);
+        Task_Params_init(&tskParam);
+        tskParam.priority = 2;
+        tskParam.stackSize = 512;
+        tskParam.instance->name = "taskCO_timer";
+        taskHdl_CO_timer = Task_create(taskCO_timer, &tskParam, &eb);
+        if (taskHdl_CO_timer == NULL) {
+            System_printf("Task_create() CO_timer failed!\n");
+            BIOS_exit(0);
+        }
 
 
         /* Configure CAN transmit and receive interrupt */
@@ -144,12 +160,14 @@ Void taskCO_main(UArg a0, UArg a1)
         System_printf("CANopenNode - Running...\n");
 
         while(reset == CO_RESET_NOT) {
+            Task_sleep(1);
+
             /* loop for normal program execution ******************************************/
             /* get time difference since last function call */
-            uint32_t timeDifference_us = 500;
+            uint32_t timeDifference_us = 1000;
 
             /* CANopen process */
-            //reset = CO_process(CO, false, timeDifference_us, NULL);
+            reset = CO_process(CO, false, timeDifference_us, NULL);
 
             /* Nonblocking application code may go here. */
 
@@ -177,11 +195,22 @@ Void taskCO_main(UArg a0, UArg a1)
 }
 
 
+extern unsigned int RamfuncsLoadStart;
+extern unsigned int RamfuncsLoadEnd;
+extern unsigned int RamfuncsRunStart;
+
 Int main()
 {
     Error_Block eb;
+    Task_Params tskParam;
     union CANTIOC_REG shadow_cantioc;
     union CANRIOC_REG shadow_canrioc;
+
+    /*
+     * Copy ramfuncs section
+     */
+    memcpy(&RamfuncsRunStart, &RamfuncsLoadStart,
+           &RamfuncsLoadEnd - &RamfuncsLoadStart);
 
     System_printf("enter main()\n");
 
@@ -211,7 +240,11 @@ Int main()
     EDIS;
 
     Error_init(&eb);
-    taskHdl_CO = Task_create(taskCO_main, NULL, &eb);
+    Task_Params_init(&tskParam);
+    tskParam.priority = 1;
+    tskParam.stackSize = 1024;
+    tskParam.instance->name = "taskCO_main";
+    taskHdl_CO = Task_create(taskCO_main, &tskParam, &eb);
     if (taskHdl_CO == NULL) {
         System_printf("Task_create() failed!\n");
         BIOS_exit(0);

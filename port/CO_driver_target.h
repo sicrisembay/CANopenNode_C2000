@@ -34,6 +34,11 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <xdc/runtime/Error.h>
+#include <xdc/runtime/System.h>
+#include <ti/sysbios/BIOS.h>
+#include <ti/sysbios/gates/GateMutex.h>
+#include <ti/sysbios/family/c28/Hwi.h>
 #include "DSP2833x_Device.h"
 
 #ifdef CO_DRIVER_CUSTOM
@@ -65,9 +70,14 @@ typedef double                  float64_t;
 
 
 /* Access to received CAN message */
-#define CO_CANrxMsg_readIdent(msg) ((uint16_t)0)
-#define CO_CANrxMsg_readDLC(msg)   ((uint8_t)0)
-#define CO_CANrxMsg_readData(msg)  ((uint8_t *)NULL)
+#define CO_CANrxMsg_readIdent(msg)  \
+            ((uint16_t)(((CO_CANrxMsg_t *)msg)->ident))
+
+#define CO_CANrxMsg_readDLC(msg)    \
+            ((uint8_t)(((CO_CANrxMsg_t *)msg)->DLC))
+
+#define CO_CANrxMsg_readData(msg)   \
+            ((uint8_t *)&(((CO_CANrxMsg_t *)msg)->data[0]))
 
 /* Received message object */
 typedef struct {
@@ -76,6 +86,12 @@ typedef struct {
     void *object;
     void (*CANrx_callback)(void *object, void *message);
 } CO_CANrx_t;
+
+typedef struct {
+    uint32_t ident;
+    uint8_t DLC;
+    uint8_t data[8];
+} CO_CANrxMsg_t;
 
 /* Transmit message object */
 typedef struct {
@@ -100,6 +116,12 @@ typedef struct {
     volatile bool_t firstCANtxMessage;
     volatile uint16_t CANtxCount;
     uint32_t errOld;
+    GateMutex_Handle mtxHdl_can_send;
+    IArg keyMtx_can_send;
+    GateMutex_Handle mtxHdl_can_emcy;
+    IArg keyMtx_can_emcy;
+    GateMutex_Handle mtxHdl_can_od;
+    IArg keyMtx_can_od;
 } CO_CANmodule_t;
 
 
@@ -115,16 +137,22 @@ typedef struct {
 
 
 /* (un)lock critical section in CO_CANsend() */
-#define CO_LOCK_CAN_SEND(CAN_MODULE)
-#define CO_UNLOCK_CAN_SEND(CAN_MODULE)
+#define CO_LOCK_CAN_SEND(CAN_MODULE)    \
+                CAN_MODULE->keyMtx_can_send = GateMutex_enter(CAN_MODULE->mtxHdl_can_send)
+#define CO_UNLOCK_CAN_SEND(CAN_MODULE)  \
+                GateMutex_leave(CAN_MODULE->mtxHdl_can_send, CAN_MODULE->keyMtx_can_send)
 
 /* (un)lock critical section in CO_errorReport() or CO_errorReset() */
-#define CO_LOCK_EMCY(CAN_MODULE)
-#define CO_UNLOCK_EMCY(CAN_MODULE)
+#define CO_LOCK_EMCY(CAN_MODULE)        \
+                CAN_MODULE->keyMtx_can_emcy = GateMutex_enter(CAN_MODULE->mtxHdl_can_emcy)
+#define CO_UNLOCK_EMCY(CAN_MODULE)      \
+        GateMutex_leave(CAN_MODULE->mtxHdl_can_emcy, CAN_MODULE->keyMtx_can_emcy)
 
 /* (un)lock critical section when accessing Object Dictionary */
-#define CO_LOCK_OD(CAN_MODULE)
-#define CO_UNLOCK_OD(CAN_MODULE)
+#define CO_LOCK_OD(CAN_MODULE)          \
+        CAN_MODULE->keyMtx_can_od = GateMutex_enter(CAN_MODULE->mtxHdl_can_od)
+#define CO_UNLOCK_OD(CAN_MODULE)        \
+        GateMutex_leave(CAN_MODULE->mtxHdl_can_od, CAN_MODULE->keyMtx_can_od)
 
 /* Synchronization between CAN receive and message processing threads. */
 #define CO_MemoryBarrier()

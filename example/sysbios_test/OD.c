@@ -252,42 +252,42 @@ static CO_PROGMEM ODObjs_t ODObjs = {
     .o_1000_deviceType = {
         .dataOrig = &OD_PERSIST_COMM.x1000_deviceType,
         .attribute = ODA_SDO_R | ODA_MB,
-        .dataLength = 4
+        .dataLength = sizeof(OD_PERSIST_COMM.x1000_deviceType)
     },
     .o_1001_errorRegister = {
         .dataOrig = &OD_RAM.x1001_errorRegister,
         .attribute = ODA_SDO_R | ODA_TRPDO,
-        .dataLength = 1
+        .dataLength = sizeof(OD_RAM.x1001_errorRegister)
     },
     .o_1003_pre_definedErrorField = {
         .dataOrig0 = &OD_RAM.x1003_pre_definedErrorField_sub0,
         .dataOrig = &OD_RAM.x1003_pre_definedErrorField[0],
         .attribute0 = ODA_SDO_RW,
         .attribute = ODA_SDO_R | ODA_MB,
-        .dataElementLength = 4,
+        .dataElementLength = sizeof(OD_RAM.x1003_pre_definedErrorField[0]),
         .dataElementSizeof = sizeof(uint32_t)
     },
     .o_1005_COB_ID_SYNCMessage = {
         .dataOrig = &OD_PERSIST_COMM.x1005_COB_ID_SYNCMessage,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataLength = 4
+        .dataLength = sizeof(OD_PERSIST_COMM.x1005_COB_ID_SYNCMessage)
     },
     .o_1006_communicationCyclePeriod = {
         .dataOrig = &OD_PERSIST_COMM.x1006_communicationCyclePeriod,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataLength = 4
+        .dataLength = sizeof(OD_PERSIST_COMM.x1006_communicationCyclePeriod)
     },
     .o_1007_synchronousWindowLength = {
         .dataOrig = &OD_PERSIST_COMM.x1007_synchronousWindowLength,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataLength = 4
+        .dataLength = sizeof(OD_PERSIST_COMM.x1007_synchronousWindowLength)
     },
     .o_1010_storeParameters = {
         .dataOrig0 = &OD_RAM.x1010_storeParameters_sub0,
         .dataOrig = &OD_RAM.x1010_storeParameters[0],
         .attribute0 = ODA_SDO_R,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataElementLength = 4,
+        .dataElementLength = sizeof(OD_RAM.x1010_storeParameters[0]),
         .dataElementSizeof = sizeof(uint32_t)
     },
     .o_1011_restoreDefaultParameters = {
@@ -295,92 +295,92 @@ static CO_PROGMEM ODObjs_t ODObjs = {
         .dataOrig = &OD_RAM.x1011_restoreDefaultParameters[0],
         .attribute0 = ODA_SDO_R,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataElementLength = 4,
+        .dataElementLength = sizeof(OD_RAM.x1011_restoreDefaultParameters[0]),
         .dataElementSizeof = sizeof(uint32_t)
     },
     .o_1012_COB_IDTimeStampObject = {
         .dataOrig = &OD_PERSIST_COMM.x1012_COB_IDTimeStampObject,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataLength = 4
+        .dataLength = sizeof(OD_PERSIST_COMM.x1012_COB_IDTimeStampObject)
     },
     .o_1014_COB_ID_EMCY = {
         .dataOrig = &OD_PERSIST_COMM.x1014_COB_ID_EMCY,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataLength = 4
+        .dataLength = sizeof(OD_PERSIST_COMM.x1014_COB_ID_EMCY)
     },
     .o_1015_inhibitTimeEMCY = {
         .dataOrig = &OD_PERSIST_COMM.x1015_inhibitTimeEMCY,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataLength = 2
+        .dataLength = sizeof(OD_PERSIST_COMM.x1015_inhibitTimeEMCY)
     },
     .o_1016_consumerHeartbeatTime = {
         .dataOrig0 = &OD_PERSIST_COMM.x1016_consumerHeartbeatTime_sub0,
         .dataOrig = &OD_PERSIST_COMM.x1016_consumerHeartbeatTime[0],
         .attribute0 = ODA_SDO_R,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataElementLength = 4,
+        .dataElementLength = sizeof(OD_PERSIST_COMM.x1016_consumerHeartbeatTime[0]),
         .dataElementSizeof = sizeof(uint32_t)
     },
     .o_1017_producerHeartbeatTime = {
         .dataOrig = &OD_PERSIST_COMM.x1017_producerHeartbeatTime,
         .attribute = ODA_SDO_RW | ODA_MB,
-        .dataLength = 2
+        .dataLength = sizeof(OD_PERSIST_COMM.x1017_producerHeartbeatTime)
     },
     .o_1018_identity = {
         {
             .dataOrig = &OD_PERSIST_COMM.x1018_identity.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1018_identity.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1018_identity.vendor_ID,
             .subIndex = 1,
             .attribute = ODA_SDO_R | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1018_identity.vendor_ID)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1018_identity.productCode,
             .subIndex = 2,
             .attribute = ODA_SDO_R | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1018_identity.productCode)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1018_identity.revisionNumber,
             .subIndex = 3,
             .attribute = ODA_SDO_R | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1018_identity.revisionNumber)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1018_identity.serialNumber,
             .subIndex = 4,
             .attribute = ODA_SDO_R | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1018_identity.serialNumber)
         }
     },
     .o_1019_synchronousCounterOverflowValue = {
         .dataOrig = &OD_PERSIST_COMM.x1019_synchronousCounterOverflowValue,
         .attribute = ODA_SDO_RW,
-        .dataLength = 1
+        .dataLength = sizeof(OD_PERSIST_COMM.x1019_synchronousCounterOverflowValue)
     },
     .o_1200_SDOServerParameter = {
         {
             .dataOrig = &OD_RAM.x1200_SDOServerParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_RAM.x1200_SDOServerParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_RAM.x1200_SDOServerParameter.COB_IDClientToServerRx,
             .subIndex = 1,
             .attribute = ODA_SDO_R | ODA_TPDO | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_RAM.x1200_SDOServerParameter.COB_IDClientToServerRx)
         },
         {
             .dataOrig = &OD_RAM.x1200_SDOServerParameter.COB_IDServerToClientTx,
             .subIndex = 2,
             .attribute = ODA_SDO_R | ODA_TPDO | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_RAM.x1200_SDOServerParameter.COB_IDServerToClientTx)
         }
     },
     .o_1280_SDOClientParameter = {
@@ -388,25 +388,25 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1280_SDOClientParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1280_SDOClientParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1280_SDOClientParameter.COB_IDClientToServerTx,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_TRPDO | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1280_SDOClientParameter.COB_IDClientToServerTx)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1280_SDOClientParameter.COB_IDServerToClientRx,
             .subIndex = 2,
             .attribute = ODA_SDO_RW | ODA_TRPDO | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1280_SDOClientParameter.COB_IDServerToClientRx)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1280_SDOClientParameter.node_IDOfTheSDOServer,
             .subIndex = 3,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1280_SDOClientParameter.node_IDOfTheSDOServer)
         }
     },
     .o_1400_RPDOCommunicationParameter = {
@@ -414,25 +414,25 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1400_RPDOCommunicationParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1400_RPDOCommunicationParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1400_RPDOCommunicationParameter.COB_IDUsedByRPDO,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1400_RPDOCommunicationParameter.COB_IDUsedByRPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1400_RPDOCommunicationParameter.transmissionType,
             .subIndex = 2,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1400_RPDOCommunicationParameter.transmissionType)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1400_RPDOCommunicationParameter.eventTimer,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1400_RPDOCommunicationParameter.eventTimer)
         }
     },
     .o_1401_RPDOCommunicationParameter = {
@@ -440,25 +440,25 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1401_RPDOCommunicationParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1401_RPDOCommunicationParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1401_RPDOCommunicationParameter.COB_IDUsedByRPDO,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1401_RPDOCommunicationParameter.COB_IDUsedByRPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1401_RPDOCommunicationParameter.transmissionType,
             .subIndex = 2,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1401_RPDOCommunicationParameter.transmissionType)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1401_RPDOCommunicationParameter.eventTimer,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1401_RPDOCommunicationParameter.eventTimer)
         }
     },
     .o_1402_RPDOCommunicationParameter = {
@@ -466,25 +466,25 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1402_RPDOCommunicationParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1402_RPDOCommunicationParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1402_RPDOCommunicationParameter.COB_IDUsedByRPDO,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1402_RPDOCommunicationParameter.COB_IDUsedByRPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1402_RPDOCommunicationParameter.transmissionType,
             .subIndex = 2,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1402_RPDOCommunicationParameter.transmissionType)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1402_RPDOCommunicationParameter.eventTimer,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1402_RPDOCommunicationParameter.eventTimer)
         }
     },
     .o_1403_RPDOCommunicationParameter = {
@@ -492,25 +492,25 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1403_RPDOCommunicationParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1403_RPDOCommunicationParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1403_RPDOCommunicationParameter.COB_IDUsedByRPDO,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1403_RPDOCommunicationParameter.COB_IDUsedByRPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1403_RPDOCommunicationParameter.transmissionType,
             .subIndex = 2,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1403_RPDOCommunicationParameter.transmissionType)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1403_RPDOCommunicationParameter.eventTimer,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1403_RPDOCommunicationParameter.eventTimer)
         }
     },
     .o_1600_RPDOMappingParameter = {
@@ -518,55 +518,55 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1600_RPDOMappingParameter.numberOfMappedApplicationObjectsInPDO,
             .subIndex = 0,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1600_RPDOMappingParameter.numberOfMappedApplicationObjectsInPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_1,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_1)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_2,
             .subIndex = 2,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_2)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_3,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_3)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_4,
             .subIndex = 4,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_4)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_5,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_5)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_6,
             .subIndex = 6,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_6)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_7,
             .subIndex = 7,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_7)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_8,
             .subIndex = 8,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1600_RPDOMappingParameter.applicationObject_8)
         }
     },
     .o_1601_RPDOMappingParameter = {
@@ -574,55 +574,55 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1601_RPDOMappingParameter.numberOfMappedApplicationObjectsInPDO,
             .subIndex = 0,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1601_RPDOMappingParameter.numberOfMappedApplicationObjectsInPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_1,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_1)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_2,
             .subIndex = 2,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_2)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_3,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_3)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_4,
             .subIndex = 4,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_4)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_5,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_5)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_6,
             .subIndex = 6,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_6)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_7,
             .subIndex = 7,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_7)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_8,
             .subIndex = 8,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1601_RPDOMappingParameter.applicationObject_8)
         }
     },
     .o_1602_RPDOMappingParameter = {
@@ -630,55 +630,55 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1602_RPDOMappingParameter.numberOfMappedApplicationObjectsInPDO,
             .subIndex = 0,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1602_RPDOMappingParameter.numberOfMappedApplicationObjectsInPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_1,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_1)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_2,
             .subIndex = 2,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_2)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_3,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_3)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_4,
             .subIndex = 4,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_4)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_5,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_5)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_6,
             .subIndex = 6,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_6)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_7,
             .subIndex = 7,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_7)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_8,
             .subIndex = 8,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1602_RPDOMappingParameter.applicationObject_8)
         }
     },
     .o_1603_RPDOMappingParameter = {
@@ -686,55 +686,55 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1603_RPDOMappingParameter.numberOfMappedApplicationObjectsInPDO,
             .subIndex = 0,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1603_RPDOMappingParameter.numberOfMappedApplicationObjectsInPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_1,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_1)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_2,
             .subIndex = 2,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_2)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_3,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_3)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_4,
             .subIndex = 4,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_4)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_5,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_5)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_6,
             .subIndex = 6,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_6)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_7,
             .subIndex = 7,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_7)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_8,
             .subIndex = 8,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1603_RPDOMappingParameter.applicationObject_8)
         }
     },
     .o_1800_TPDOCommunicationParameter = {
@@ -742,37 +742,37 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.COB_IDUsedByTPDO,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.COB_IDUsedByTPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.transmissionType,
             .subIndex = 2,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.transmissionType)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.inhibitTime,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.inhibitTime)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.eventTimer,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.eventTimer)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.SYNCStartValue,
             .subIndex = 6,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1800_TPDOCommunicationParameter.SYNCStartValue)
         }
     },
     .o_1801_TPDOCommunicationParameter = {
@@ -780,37 +780,37 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.COB_IDUsedByTPDO,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.COB_IDUsedByTPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.transmissionType,
             .subIndex = 2,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.transmissionType)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.inhibitTime,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.inhibitTime)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.eventTimer,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.eventTimer)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.SYNCStartValue,
             .subIndex = 6,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1801_TPDOCommunicationParameter.SYNCStartValue)
         }
     },
     .o_1802_TPDOCommunicationParameter = {
@@ -818,37 +818,37 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.COB_IDUsedByTPDO,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.COB_IDUsedByTPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.transmissionType,
             .subIndex = 2,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.transmissionType)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.inhibitTime,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.inhibitTime)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.eventTimer,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.eventTimer)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.SYNCStartValue,
             .subIndex = 6,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1802_TPDOCommunicationParameter.SYNCStartValue)
         }
     },
     .o_1803_TPDOCommunicationParameter = {
@@ -856,37 +856,37 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.highestSub_indexSupported,
             .subIndex = 0,
             .attribute = ODA_SDO_R,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.highestSub_indexSupported)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.COB_IDUsedByTPDO,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.COB_IDUsedByTPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.transmissionType,
             .subIndex = 2,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.transmissionType)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.inhibitTime,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.inhibitTime)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.eventTimer,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 2
+            .dataLength = sizeof(OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.eventTimer)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.SYNCStartValue,
             .subIndex = 6,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1803_TPDOCommunicationParameter.SYNCStartValue)
         }
     },
     .o_1A00_TPDOMappingParameter = {
@@ -894,55 +894,55 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1A00_TPDOMappingParameter.numberOfMappedApplicationObjectsInPDO,
             .subIndex = 0,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A00_TPDOMappingParameter.numberOfMappedApplicationObjectsInPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_1,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_1)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_2,
             .subIndex = 2,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_2)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_3,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_3)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_4,
             .subIndex = 4,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_4)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_5,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_5)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_6,
             .subIndex = 6,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_6)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_7,
             .subIndex = 7,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_7)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_8,
             .subIndex = 8,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A00_TPDOMappingParameter.applicationObject_8)
         }
     },
     .o_1A01_TPDOMappingParameter = {
@@ -950,55 +950,55 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1A01_TPDOMappingParameter.numberOfMappedApplicationObjectsInPDO,
             .subIndex = 0,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A01_TPDOMappingParameter.numberOfMappedApplicationObjectsInPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_1,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_1)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_2,
             .subIndex = 2,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_2)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_3,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_3)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_4,
             .subIndex = 4,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_4)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_5,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_5)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_6,
             .subIndex = 6,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_6)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_7,
             .subIndex = 7,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_7)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_8,
             .subIndex = 8,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A01_TPDOMappingParameter.applicationObject_8)
         }
     },
     .o_1A02_TPDOMappingParameter = {
@@ -1006,55 +1006,55 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1A02_TPDOMappingParameter.numberOfMappedApplicationObjectsInPDO,
             .subIndex = 0,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A02_TPDOMappingParameter.numberOfMappedApplicationObjectsInPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_1,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_1)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_2,
             .subIndex = 2,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_2)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_3,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_3)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_4,
             .subIndex = 4,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_4)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_5,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_5)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_6,
             .subIndex = 6,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_6)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_7,
             .subIndex = 7,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_7)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_8,
             .subIndex = 8,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A02_TPDOMappingParameter.applicationObject_8)
         }
     },
     .o_1A03_TPDOMappingParameter = {
@@ -1062,55 +1062,55 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataOrig = &OD_PERSIST_COMM.x1A03_TPDOMappingParameter.numberOfMappedApplicationObjectsInPDO,
             .subIndex = 0,
             .attribute = ODA_SDO_RW,
-            .dataLength = 1
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A03_TPDOMappingParameter.numberOfMappedApplicationObjectsInPDO)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_1,
             .subIndex = 1,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_1)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_2,
             .subIndex = 2,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_2)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_3,
             .subIndex = 3,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_3)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_4,
             .subIndex = 4,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_4)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_5,
             .subIndex = 5,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_5)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_6,
             .subIndex = 6,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_6)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_7,
             .subIndex = 7,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_7)
         },
         {
             .dataOrig = &OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_8,
             .subIndex = 8,
             .attribute = ODA_SDO_RW | ODA_MB,
-            .dataLength = 4
+            .dataLength = sizeof(OD_PERSIST_COMM.x1A03_TPDOMappingParameter.applicationObject_8)
         }
     }
 };

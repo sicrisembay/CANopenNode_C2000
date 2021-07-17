@@ -89,8 +89,8 @@ extern cregister volatile unsigned int IER;
 typedef int                int16;
 typedef long               int32;
 typedef long long          int64;
-typedef unsigned int       Uint16;
-typedef unsigned long      Uint32;
+//typedef unsigned int       Uint16;    // Fix warning: multiple typedef of Uint16 when using SysBIOS (already defined in xdc/std.h)
+//typedef unsigned long      Uint32;    // Fix warning: multiple typedef of Uint32 when using SysBIOS (already defined in xdc/std.h)
 typedef unsigned long long Uint64;
 typedef float              float32;
 typedef long double        float64;
@@ -99,6 +99,7 @@ typedef long double        float64;
 //
 // Included Peripheral Header Files
 //
+#include <xdc/std.h>                     // Fix warning: multiple typedef of UInt16 and UInt32 when using SysBIOS
 #include "DSP2833x_Adc.h"                // ADC Registers
 #include "DSP2833x_DevEmu.h"             // Device Emulation Registers
 #include "DSP2833x_CpuTimers.h"          // 32-bit CPU Timers
