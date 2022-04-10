@@ -178,6 +178,10 @@ CO_ReturnError_t CO_CANmodule_init(
     CANmodule->mtxHdl_can_od = NULL;
 
     /* Create HWI */
+    if(hwiHdl_can != NULL) {
+        Hwi_delete(&hwiHdl_can);
+        hwiHdl_can = NULL;
+    }
     Hwi_Params_init(&hwiParams);
     hwiParams.enableAck = true;
     hwiParams.arg = (xdc_UArg)CANmodule;
