@@ -15,7 +15,7 @@
         <ProfileTechnology>CANopen</ProfileTechnology>
       </ISO15745Reference>
     </ProfileHeader>
-    <ProfileBody xmlns:q1="http://www.canopen.org/xml/1.1" xsi:type="q1:ProfileBody_Device_CANopen" formatName="CANopen" formatVersion="1.0" fileName="sysbios_test.xdd" fileCreator="" fileCreationDate="2022-04-10" fileCreationTime="15:27:28.5962803+08:00" fileModifiedBy="" fileModificationDate="2022-04-10" fileModificationTime="15:48:39.9160476+08:00" fileVersion="1" supportedLanguages="en" xmlns="">
+    <ProfileBody xmlns:q1="http://www.canopen.org/xml/1.1" xsi:type="q1:ProfileBody_Device_CANopen" formatName="CANopen" formatVersion="1.0" fileName="sysbios_test.xdd" fileCreator="" fileCreationDate="2022-04-10" fileCreationTime="15:27:28.5962803+08:00" fileModifiedBy="" fileModificationDate="2022-04-11" fileModificationTime="09:19:24.1068993+08:00" fileVersion="1" supportedLanguages="en" xmlns="">
       <q1:DeviceIdentity>
         <q1:vendorName></q1:vendorName>
         <q1:vendorID></q1:vendorID>
@@ -576,7 +576,6 @@
             <label lang="en">Manufacturer device name</label>
             <STRING />
             <q1:defaultValue value="Test Manufacturer" />
-            <q1:property name="CO_disabled" value="true" />
             <q1:property name="CO_storageGroup" value="PERSIST_COMM" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_OBJ_1009">
@@ -1571,7 +1570,7 @@
         <ProfileTechnology>CANopen</ProfileTechnology>
       </ISO15745Reference>
     </ProfileHeader>
-    <ProfileBody xmlns:q2="http://www.canopen.org/xml/1.1" xsi:type="q2:ProfileBody_CommunicationNetwork_CANopen" formatName="CANopen" formatVersion="1.0" fileName="sysbios_test.xdd" fileCreator="" fileCreationDate="2022-04-10" fileCreationTime="15:27:28.5962803+08:00" fileModificationDate="2022-04-10" fileModificationTime="15:48:39.9160476+08:00" fileVersion="1" supportedLanguages="en" xmlns="">
+    <ProfileBody xmlns:q2="http://www.canopen.org/xml/1.1" xsi:type="q2:ProfileBody_CommunicationNetwork_CANopen" formatName="CANopen" formatVersion="1.0" fileName="sysbios_test.xdd" fileCreator="" fileCreationDate="2022-04-10" fileCreationTime="15:27:28.5962803+08:00" fileModificationDate="2022-04-11" fileModificationTime="09:19:24.1068993+08:00" fileVersion="1" supportedLanguages="en" xmlns="">
       <ApplicationLayers>
         <q2:CANopenObjectList>
           <CANopenObject index="1000" name="Device type" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_1000" />

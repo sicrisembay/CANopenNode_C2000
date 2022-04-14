@@ -173,9 +173,6 @@ CO_ReturnError_t CO_CANmodule_init(
     ECanRegPtr = (volatile struct ECAN_REGS *)CANptr;
 
     Error_init(&eb);
-    CANmodule->mtxHdl_can_send = NULL;
-    CANmodule->mtxHdl_can_emcy = NULL;
-    CANmodule->mtxHdl_can_od = NULL;
 
     /* Create HWI */
     if(hwiHdl_can != NULL) {
@@ -198,6 +195,9 @@ CO_ReturnError_t CO_CANmodule_init(
     }
 
     /* Create Gate Mutex for CAN_SEND */
+    if(CANmodule->mtxHdl_can_send != NULL) {
+        GateMutex_delete(&(CANmodule->mtxHdl_can_send));
+    }
     GateMutex_Params_init(&gateMtxParams);
     CANmodule->mtxHdl_can_send = GateMutex_create(&gateMtxParams, &eb);
     if((Error_check(&eb) == TRUE) || (CANmodule->mtxHdl_can_send == NULL)) {
@@ -206,6 +206,9 @@ CO_ReturnError_t CO_CANmodule_init(
     }
 
     /* Create Gate Mutex for CAN_SEND */
+    if(CANmodule->mtxHdl_can_emcy != NULL) {
+        GateMutex_delete(&(CANmodule->mtxHdl_can_emcy));
+    }
     GateMutex_Params_init(&gateMtxParams);
     CANmodule->mtxHdl_can_emcy = GateMutex_create(&gateMtxParams, &eb);
     if((Error_check(&eb) == TRUE) || (CANmodule->mtxHdl_can_emcy == NULL)) {
@@ -214,6 +217,9 @@ CO_ReturnError_t CO_CANmodule_init(
     }
 
     /* Create Gate Mutex for CAN_OD */
+    if(CANmodule->mtxHdl_can_od != NULL) {
+        GateMutex_delete(&(CANmodule->mtxHdl_can_od));
+    }
     GateMutex_Params_init(&gateMtxParams);
     CANmodule->mtxHdl_can_od = GateMutex_create(&gateMtxParams, &eb);
     if((Error_check(&eb) == TRUE) || (CANmodule->mtxHdl_can_od == NULL)) {

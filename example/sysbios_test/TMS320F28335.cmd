@@ -72,7 +72,8 @@ PAGE 0:    /* Program Memory */
 
 PAGE 1 :   /* Data Memory */
 
-    M01SARAM    : origin = 0x000000, length = 0x000800     /* on-chip RAM block M0, M1 */
+    RESERVED    : origin = 0x000000, length = 0x000002
+    M01SARAM    : origin = 0x000002, length = 0x0007FE     /* on-chip RAM block M0, M1 */
     PIEVECT     : origin = 0xD00,    length = 0x100
     L07SARAM    : origin = 0x008000, length = 0x008000     /* on-chip RAM block L0-L7 */
 
