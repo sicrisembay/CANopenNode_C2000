@@ -267,6 +267,7 @@ CO_ReturnError_t CO_CANmodule_init(
     shadow_canmc.bit.DBO = 0;
     shadow_canmc.bit.SCB = 1;
     shadow_canmc.bit.CCR = 1;
+    shadow_canmc.bit.ABO = 1;
     ECanRegPtr->CANMC.all = shadow_canmc.all;
 
     do {
@@ -530,6 +531,8 @@ CO_CANtx_t *CO_CANtxBufferInit(
         bool_t                  syncFlag)
 {
     CO_CANtx_t *buffer = NULL;
+    volatile struct ECAN_REGS * ECanRegPtr;
+    union CANMIM_REG shadow_canmim;
 
     if((CANmodule != NULL) && (index < CANmodule->txSize)){
         /* get specific buffer */
@@ -546,6 +549,14 @@ CO_CANtx_t *CO_CANtxBufferInit(
         buffer->syncFlag = syncFlag;
     }
 
+    if(CANmodule != NULL) {
+        ECanRegPtr = (volatile struct ECAN_REGS *)(CANmodule->CANptr);
+        EALLOW;
+        shadow_canmim.all = ECanRegPtr->CANMIM.all;
+        shadow_canmim.all |= (1UL << CAN_MAILBOX_TX);
+        ECanRegPtr->CANMIM.all = shadow_canmim.all;
+        EDIS;
+    }
     return buffer;
 }
 
@@ -742,7 +753,7 @@ void CO_CANmodule_process(CO_CANmodule_t *CANmodule) {
             /* tx bus warning or passive */
             if (txErrors >= 128) {
                 status |= CO_CAN_ERRTX_WARNING | CO_CAN_ERRTX_PASSIVE;
-            } else if (rxErrors >= 96) {
+            } else if (txErrors >= 96) {
                 status |= CO_CAN_ERRTX_WARNING;
             }
 
