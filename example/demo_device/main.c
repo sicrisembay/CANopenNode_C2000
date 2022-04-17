@@ -29,6 +29,24 @@ static Task_Handle taskHdl_CO_timer;
 static CO_t * CO = NULL;
 static void * CANptr = NULL; /* CAN module address */
 
+#pragma CODE_SECTION(Device_reset, "ramfuncs");
+void Device_reset(void)
+{
+    /* Tickle dog */
+    EALLOW;
+    SysCtrlRegs.WDKEY = 0x0055;
+    SysCtrlRegs.WDKEY = 0x00AA;
+    EDIS;
+
+    /* Enable watchdog */
+    EALLOW;
+    SysCtrlRegs.WDCR = 0x0000;  /* writing value other than b101 to WDCHK will immediately resets the device */
+    EDIS;
+
+    /* Should not reach here */
+    while(1);
+}
+
 Void taskCO_timer(UArg a0, UArg a1)
 {
     while(1) {
@@ -182,16 +200,11 @@ Void taskCO_main(UArg a0, UArg a1)
 
     };
 
-    /* Exit */
-    /* Stop thread */
-    /// TODO
-    /* Delete CANopen object */
-    CO_CANsetConfigurationMode(CANptr);
-    CO_delete(CO);
-    System_printf("CANopenNode finished\n");
-    /* Delete this task */
-    Task_delete(&taskHdl_CO);
+    /* Complete Device Reset */
+    Device_reset();
 
+    /* Must not reach here */
+    while(1);
 }
 
 
