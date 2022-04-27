@@ -150,6 +150,17 @@ Void taskCO_main(UArg a0, UArg a1)
             BIOS_exit(0);
         }
 
+        err = CO_CANopenInitPDO(CO, CO->em, OD, activeNodeId, &errInfo);
+        if(err != CO_ERROR_NO) {
+            if (err == CO_ERROR_OD_PARAMETERS) {
+                System_printf("Error: Object Dictionary entry 0x%X\n", errInfo);
+            }
+            else {
+                System_printf("Error: PDO initialization failed: %d\n", err);
+            }
+            BIOS_exit(0);
+        }
+
         /*
          * Configure Timer Task for execution every 1 millisecond
          * Note: taskCO_timer priority must be higher than taskCO_main priority
