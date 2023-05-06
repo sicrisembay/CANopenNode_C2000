@@ -424,6 +424,12 @@ CO_ReturnError_t CO_CANrxBufferInit(
     CO_ReturnError_t ret = CO_ERROR_NO;
 
     if((CANmodule!=NULL) && (object!=NULL) && (CANrx_callback!=NULL) && (index < CANmodule->rxSize)){
+        /*
+         * Note: In C2000 MCU, Higher Mailbox number takes higher priority
+         * Change index, i.e. NMT (index0) has highest receive mailbox priority
+         */
+        index = CANmodule->rxSize - index - 1;
+
         ECanRegPtr = (volatile struct ECAN_REGS *)(CANmodule->CANptr);
 
         if(ECanRegPtr == &ECanaRegs) {
