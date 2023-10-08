@@ -38,6 +38,7 @@
 #include <xdc/runtime/System.h>
 #include <ti/sysbios/BIOS.h>
 #include <ti/sysbios/gates/GateMutex.h>
+#include <ti/sysbios/gates/GateHwi.h>
 #include <ti/sysbios/family/c28/Hwi.h>
 #include "DSP2833x_Device.h"
 
@@ -95,11 +96,13 @@ typedef struct {
 
 /* Transmit message object */
 typedef struct {
+    uint32_t mailboxIdx;
     uint32_t ident;
     uint8_t DLC;
     uint8_t data[8];
     volatile bool_t bufferFull;
     volatile bool_t syncFlag;
+    volatile bool_t bufferInhibitFlag;
 } CO_CANtx_t;
 
 /* CAN module object */
@@ -112,12 +115,10 @@ typedef struct {
     uint16_t CANerrorStatus;
     volatile bool_t CANnormal;
     volatile bool_t useCANrxFilters;
-    volatile bool_t bufferInhibitFlag;
     volatile bool_t firstCANtxMessage;
-    volatile uint16_t CANtxCount;
     uint32_t errOld;
-    GateMutex_Handle mtxHdl_can_send;
-    IArg keyMtx_can_send;
+    GateHwi_Handle gateHwi_can_send;
+    IArg key_can_send;
     GateMutex_Handle mtxHdl_can_emcy;
     IArg keyMtx_can_emcy;
     GateMutex_Handle mtxHdl_can_od;
@@ -138,9 +139,9 @@ typedef struct {
 
 /* (un)lock critical section in CO_CANsend() */
 #define CO_LOCK_CAN_SEND(CAN_MODULE)    \
-                CAN_MODULE->keyMtx_can_send = GateMutex_enter(CAN_MODULE->mtxHdl_can_send)
+                CAN_MODULE->key_can_send = GateHwi_enter(CAN_MODULE->gateHwi_can_send)
 #define CO_UNLOCK_CAN_SEND(CAN_MODULE)  \
-                GateMutex_leave(CAN_MODULE->mtxHdl_can_send, CAN_MODULE->keyMtx_can_send)
+                GateHwi_leave(CAN_MODULE->gateHwi_can_send, CAN_MODULE->key_can_send)
 
 /* (un)lock critical section in CO_errorReport() or CO_errorReset() */
 #define CO_LOCK_EMCY(CAN_MODULE)        \

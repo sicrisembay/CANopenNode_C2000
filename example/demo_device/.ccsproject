@@ -13,5 +13,5 @@
 	<createSlaveProjects value=""/>
 	<templateProperties value="id=com.ti.rtsc.SYSBIOS.example_46,type=rtsc,products=com.ti.rtsc.SYSBIOS,target=ti.targets.C28_float,platform=ti.platforms.tms320x28:$DeviceId$,buildProfile=release,isHybrid=true,configuroOptions=--compileOptions &quot;-g&quot;"/>
 	<filesToOpen value=""/>
-	<isTargetManual value="false"/>
+	<isTargetManual value="true"/>
 </projectOptions>

@@ -28,6 +28,8 @@
 
 #include "301/CO_driver.h"
 
+#define CANOPEN_F82335_MAILBOX_CNT  (32)
+
 typedef struct {
     uint16_t bit_rate_kbps;
     uint16_t brp;
@@ -81,7 +83,6 @@ static BTC_CONFIG_ENTRY_T const BTC_CONFIG_TABLE[] = {
 };
 
 #define N_BTC_CONFIG_ENTRY      (sizeof(BTC_CONFIG_TABLE) / sizeof(BTC_CONFIG_TABLE[0]))
-#define CAN_MAILBOX_TX          (31)
 
 static Hwi_Handle hwiHdl_can = NULL;
 
@@ -162,11 +163,13 @@ CO_ReturnError_t CO_CANmodule_init(
     Error_Block eb;
     Hwi_Params hwiParams;
     GateMutex_Params gateMtxParams;
+    GateHwi_Params gateHwiParams;
 
     uint16_t i;
 
     /* verify arguments */
-    if(CANmodule==NULL || rxArray==NULL || txArray==NULL || CANptr==NULL){
+    if(CANmodule==NULL || rxArray==NULL || txArray==NULL ||
+       CANptr==NULL || ((txSize + rxSize) > CANOPEN_F82335_MAILBOX_CNT)){
         return CO_ERROR_ILLEGAL_ARGUMENT;
     }
 
@@ -195,13 +198,13 @@ CO_ReturnError_t CO_CANmodule_init(
     }
 
     /* Create Gate Mutex for CAN_SEND */
-    if(CANmodule->mtxHdl_can_send != NULL) {
-        GateMutex_delete(&(CANmodule->mtxHdl_can_send));
+    if(CANmodule->gateHwi_can_send != NULL) {
+        GateHwi_delete(&(CANmodule->gateHwi_can_send));
     }
-    GateMutex_Params_init(&gateMtxParams);
-    CANmodule->mtxHdl_can_send = GateMutex_create(&gateMtxParams, &eb);
-    if((Error_check(&eb) == TRUE) || (CANmodule->mtxHdl_can_send == NULL)) {
-        System_printf("GateMutex_create() failed for CAN_SEND\n");
+    GateHwi_Params_init(&gateHwiParams);
+    CANmodule->gateHwi_can_send = GateHwi_create(&gateHwiParams, &eb);
+    if((Error_check(&eb) == TRUE) || (CANmodule->gateHwi_can_send == NULL)) {
+        System_printf("GateHwi_create() failed for CAN_SEND\n");
         BIOS_exit(0);
     }
 
@@ -235,10 +238,10 @@ CO_ReturnError_t CO_CANmodule_init(
     CANmodule->txSize = txSize;
     CANmodule->CANerrorStatus = 0;
     CANmodule->CANnormal = false;
-    CANmodule->useCANrxFilters = (rxSize <= 31U) ? true : false;  // Receive uses Mailbox0-30, Transmit uses Mailbox31
-    CANmodule->bufferInhibitFlag = false;
+    /* Note: always use rx filters.  Checked txSize + rxSize is always lesser
+       than or equal 32 (mailbox count) */
+    CANmodule->useCANrxFilters = true;
     CANmodule->firstCANtxMessage = true;
-    CANmodule->CANtxCount = 0U;
     CANmodule->errOld = 0U;
 
     for(i=0U; i<rxSize; i++){
@@ -249,6 +252,7 @@ CO_ReturnError_t CO_CANmodule_init(
     }
     for(i=0U; i<txSize; i++){
         txArray[i].bufferFull = false;
+        txArray[i].bufferInhibitFlag = false;
     }
 
 
@@ -539,10 +543,19 @@ CO_CANtx_t *CO_CANtxBufferInit(
     CO_CANtx_t *buffer = NULL;
     volatile struct ECAN_REGS * ECanRegPtr;
     union CANMIM_REG shadow_canmim;
+    uint16_t txMailboxIndex = CANOPEN_F82335_MAILBOX_CNT - 1;
 
-    if((CANmodule != NULL) && (index < CANmodule->txSize)){
+    if((CANmodule != NULL) && (index < CANmodule->txSize)) {
+        /*
+         * Note: In C2000 MCU, Higher Mailbox number takes higher priority
+         * Change index
+         */
+        txMailboxIndex = CANmodule->rxSize + CANmodule->txSize - index - 1;
+
         /* get specific buffer */
         buffer = &CANmodule->txArray[index];
+
+        buffer->mailboxIdx = txMailboxIndex;
 
         /* CAN identifier, DLC and rtr, bit aligned with CAN module transmit buffer.
          * Microcontroller specific. */
@@ -559,7 +572,7 @@ CO_CANtx_t *CO_CANtxBufferInit(
         ECanRegPtr = (volatile struct ECAN_REGS *)(CANmodule->CANptr);
         EALLOW;
         shadow_canmim.all = ECanRegPtr->CANMIM.all;
-        shadow_canmim.all |= (1UL << CAN_MAILBOX_TX);
+        shadow_canmim.all |= (1UL << txMailboxIndex);
         ECanRegPtr->CANMIM.all = shadow_canmim.all;
         EDIS;
     }
@@ -580,7 +593,7 @@ CO_ReturnError_t CO_CANsend(CO_CANmodule_t *CANmodule, CO_CANtx_t *buffer){
 
     CO_ReturnError_t err = CO_ERROR_NO;
 
-    if(CANmodule == NULL) {
+    if((CANmodule == NULL) || (buffer == NULL)) {
         return CO_ERROR_ILLEGAL_ARGUMENT;
     }
 
@@ -604,21 +617,21 @@ CO_ReturnError_t CO_CANsend(CO_CANmodule_t *CANmodule, CO_CANtx_t *buffer){
 
     CO_LOCK_CAN_SEND(CANmodule);
     shadow_cantrs.all = ECanRegPtr->CANTRS.all;
-    /* if CAN TX buffer is free, copy message to it */
-    if(((shadow_cantrs.all & (1UL << CAN_MAILBOX_TX)) == 0) && (CANmodule->CANtxCount == 0)){
-        CANmodule->bufferInhibitFlag = buffer->syncFlag;
+    /* if CAN TX mailbox is free, copy message to it */
+    if(((shadow_cantrs.all & (1UL << buffer->mailboxIdx)) == 0) && (buffer->bufferFull == false)){
+        buffer->bufferInhibitFlag = buffer->syncFlag;
 
         /*
          * copy message and txRequest
          */
         /* Disable mailbox to be able to modify MSGID */
         shadow_canme.all = ECanRegPtr->CANME.all;
-        shadow_canme.all &= ~(1UL << CAN_MAILBOX_TX);
+        shadow_canme.all &= ~(1UL << buffer->mailboxIdx);
         ECanRegPtr->CANME.all = shadow_canme.all;
         /* Configure MSGID */
         shadow_canmsgid.all = 0;
         shadow_canmsgid.bit.STDMSGID = buffer->ident & 0x07FFU;
-        MBoxPtr[CAN_MAILBOX_TX].MSGID.all = shadow_canmsgid.all;
+        MBoxPtr[buffer->mailboxIdx].MSGID.all = shadow_canmsgid.all;
         /* MSGCTRL */
         shadow_canmsgctrl.all = 0;
         shadow_canmsgctrl.bit.DLC = buffer->DLC;
@@ -635,22 +648,21 @@ CO_ReturnError_t CO_CANsend(CO_CANmodule_t *CANmodule, CO_CANtx_t *buffer){
         shadow_canmdh.byte.BYTE6 = buffer->data[6];
         shadow_canmdh.byte.BYTE7 = buffer->data[7];
 
-        MBoxPtr[CAN_MAILBOX_TX].MSGCTRL.all = shadow_canmsgctrl.all;
-        MBoxPtr[CAN_MAILBOX_TX].MDL.all = shadow_canmdl.all;
-        MBoxPtr[CAN_MAILBOX_TX].MDH.all = shadow_canmdh.all;
+        MBoxPtr[buffer->mailboxIdx].MSGCTRL.all = shadow_canmsgctrl.all;
+        MBoxPtr[buffer->mailboxIdx].MDL.all = shadow_canmdl.all;
+        MBoxPtr[buffer->mailboxIdx].MDH.all = shadow_canmdh.all;
 
         /* Re-enable mailbox */
         shadow_canme.all = ECanRegPtr->CANME.all;
-        shadow_canme.all |= (1UL << CAN_MAILBOX_TX);
+        shadow_canme.all |= (1UL << buffer->mailboxIdx);
         ECanRegPtr->CANME.all = shadow_canme.all;
 
-        shadow_cantrs.all = (1UL << CAN_MAILBOX_TX);
+        shadow_cantrs.all = (1UL << buffer->mailboxIdx);
         ECanRegPtr->CANTRS.all = shadow_cantrs.all;
     }
     /* if no buffer is free, message will be sent by interrupt */
     else{
         buffer->bufferFull = true;
-        CANmodule->CANtxCount++;
     }
     CO_UNLOCK_CAN_SEND(CANmodule);
 
@@ -673,33 +685,28 @@ void CO_CANclearPendingSyncPDOs(CO_CANmodule_t *CANmodule){
     ECanRegPtr = (volatile struct ECAN_REGS *)(CANmodule->CANptr);
 
     CO_LOCK_CAN_SEND(CANmodule);
+
     /* Abort message from CAN module, if there is synchronous TPDO.
      * Take special care with this functionality. */
     shadow_cantrs.all = ECanRegPtr->CANTRS.all;
-    if((shadow_cantrs.all & (1UL << CAN_MAILBOX_TX)) && CANmodule->bufferInhibitFlag){
-        /* clear TXREQ */
-        shadow_cantrr.all = (1UL << CAN_MAILBOX_TX);
-        ECanRegPtr->CANTRR.all = shadow_cantrr.all;
-        CANmodule->bufferInhibitFlag = false;
-        tpdoDeleted = 1U;
-    }
-    /* delete also pending synchronous TPDOs in TX buffers */
-    if(CANmodule->CANtxCount != 0U){
-        uint16_t i;
-        CO_CANtx_t *buffer = &CANmodule->txArray[0];
-        for(i = CANmodule->txSize; i > 0U; i--){
-            if(buffer->bufferFull){
-                if(buffer->syncFlag){
-                    buffer->bufferFull = false;
-                    CANmodule->CANtxCount--;
-                    tpdoDeleted = 2U;
-                }
-            }
-            buffer++;
+
+    CO_CANtx_t *buffer = NULL;
+    for(uint16_t i = 0; i < CANmodule->txSize; i++) {
+        buffer = &(CANmodule->txArray[i]);
+        if((shadow_cantrs.all & (1UL << buffer->mailboxIdx)) && buffer->bufferInhibitFlag) {
+            /* clear TXREQ */
+            shadow_cantrr.all = (1UL << buffer->mailboxIdx);
+            ECanRegPtr->CANTRR.all = shadow_cantrr.all;
+            buffer->bufferInhibitFlag = false;
+            tpdoDeleted = 1U;
+        }
+        if((buffer->bufferFull) && (buffer->syncFlag)) {
+            buffer->bufferFull = false;
+            tpdoDeleted = 2U;
         }
     }
-    CO_UNLOCK_CAN_SEND(CANmodule);
 
+    CO_UNLOCK_CAN_SEND(CANmodule);
 
     if(tpdoDeleted != 0U){
         CANmodule->CANerrorStatus |= CO_CAN_ERRTX_PDO_LATE;
@@ -884,79 +891,67 @@ void CO_CANinterrupt(CO_CANmodule_t *CANmodule){
     /* transmit interrupt */
     shadow_cantrs.all = ECanRegPtr->CANTRS.all;
     shadow_canta.all = ECanRegPtr->CANTA.all & ECanRegPtr->CANMIM.all;
-    if(shadow_canta.all){
+    if(shadow_canta.all != 0){
+        CO_LOCK_CAN_SEND(CANmodule);
+
+        CO_CANtx_t * pTxBuffer = NULL;
+
         /* Clear interrupt flag */
         ECanRegPtr->CANTA.all = shadow_canta.all;
 
-        if(shadow_canta.all & (1UL << CAN_MAILBOX_TX)) {
-            /* First CAN message (bootup) was sent successfully */
-            CANmodule->firstCANtxMessage = false;
-            /* clear flag from previous message */
-            CANmodule->bufferInhibitFlag = false;
-            /* Are there any new messages waiting to be send */
-            if(CANmodule->CANtxCount > 0U){
-                uint16_t i;             /* index of transmitting message */
-
-                /* first buffer */
-                CO_CANtx_t *buffer = &CANmodule->txArray[0];
-                /* search through whole array of pointers to transmit message buffers. */
-                for(i = CANmodule->txSize; i > 0U; i--){
-                    /* if message buffer is full, send it. */
-                    if(buffer->bufferFull){
-                        buffer->bufferFull = false;
-                        CANmodule->CANtxCount--;
-
-                        /* Copy message to CAN buffer */
-                        CANmodule->bufferInhibitFlag = buffer->syncFlag;
-
-                        /* can Send */
+        for(uint16_t index = 0; index < CANmodule->txSize; index++) {
+            pTxBuffer = &(CANmodule->txArray[index]);
+            if(shadow_canta.all & (1UL << pTxBuffer->mailboxIdx)) {
+                /* First CAN message (bootup) was sent successfully */
+                CANmodule->firstCANtxMessage = false;
+                /* clear flag from previous message */
+                pTxBuffer->bufferInhibitFlag = false;
+                /* Are there any new messages waiting to be send */
+                if(pTxBuffer->bufferFull) {
+                    if(pTxBuffer->bufferFull) {
+                        pTxBuffer->bufferFull = false;
+                        pTxBuffer->bufferInhibitFlag = pTxBuffer->syncFlag;
+                        /* CAN Send */
                         /* Disable mailbox to be able to modify MSGID */
                         shadow_canme.all = ECanRegPtr->CANME.all;
-                        shadow_canme.all &= ~(1UL << CAN_MAILBOX_TX);
+                        shadow_canme.all &= ~(1UL << pTxBuffer->mailboxIdx);
                         ECanRegPtr->CANME.all = shadow_canme.all;
                         /* Configure MSGID */
                         shadow_canmsgid.all = 0;
-                        shadow_canmsgid.bit.STDMSGID = buffer->ident & 0x07FFU;
-                        MBoxPtr[CAN_MAILBOX_TX].MSGID.all = shadow_canmsgid.all;
+                        shadow_canmsgid.bit.STDMSGID = pTxBuffer->ident & 0x07FFU;
+                        MBoxPtr[pTxBuffer->mailboxIdx].MSGID.all = shadow_canmsgid.all;
                         /* MSGCTRL */
                         shadow_canmsgctrl.all = 0;
-                        shadow_canmsgctrl.bit.DLC = buffer->DLC;
-                        if(buffer->ident & 0x0800U) {
+                        shadow_canmsgctrl.bit.DLC = pTxBuffer->DLC;
+                        if(pTxBuffer->ident & 0x0800U) {
                             shadow_canmsgctrl.bit.RTR = 1;
                         }
                         /* DATA */
-                        shadow_canmdl.byte.BYTE0 = buffer->data[0];
-                        shadow_canmdl.byte.BYTE1 = buffer->data[1];
-                        shadow_canmdl.byte.BYTE2 = buffer->data[2];
-                        shadow_canmdl.byte.BYTE3 = buffer->data[3];
-                        shadow_canmdh.byte.BYTE4 = buffer->data[4];
-                        shadow_canmdh.byte.BYTE5 = buffer->data[5];
-                        shadow_canmdh.byte.BYTE6 = buffer->data[6];
-                        shadow_canmdh.byte.BYTE7 = buffer->data[7];
+                        shadow_canmdl.byte.BYTE0 = pTxBuffer->data[0];
+                        shadow_canmdl.byte.BYTE1 = pTxBuffer->data[1];
+                        shadow_canmdl.byte.BYTE2 = pTxBuffer->data[2];
+                        shadow_canmdl.byte.BYTE3 = pTxBuffer->data[3];
+                        shadow_canmdh.byte.BYTE4 = pTxBuffer->data[4];
+                        shadow_canmdh.byte.BYTE5 = pTxBuffer->data[5];
+                        shadow_canmdh.byte.BYTE6 = pTxBuffer->data[6];
+                        shadow_canmdh.byte.BYTE7 = pTxBuffer->data[7];
 
-                        MBoxPtr[CAN_MAILBOX_TX].MSGCTRL.all = shadow_canmsgctrl.all;
-                        MBoxPtr[CAN_MAILBOX_TX].MDL.all = shadow_canmdl.all;
-                        MBoxPtr[CAN_MAILBOX_TX].MDH.all = shadow_canmdh.all;
+                        MBoxPtr[pTxBuffer->mailboxIdx].MSGCTRL.all = shadow_canmsgctrl.all;
+                        MBoxPtr[pTxBuffer->mailboxIdx].MDL.all = shadow_canmdl.all;
+                        MBoxPtr[pTxBuffer->mailboxIdx].MDH.all = shadow_canmdh.all;
 
                         /* Re-enable mailbox */
                         shadow_canme.all = ECanRegPtr->CANME.all;
-                        shadow_canme.all |= (1UL << CAN_MAILBOX_TX);
+                        shadow_canme.all |= (1UL << pTxBuffer->mailboxIdx);
                         ECanRegPtr->CANME.all = shadow_canme.all;
 
-                        shadow_cantrs.all = (1UL << CAN_MAILBOX_TX);
+                        shadow_cantrs.all = (1UL << pTxBuffer->mailboxIdx);
                         ECanRegPtr->CANTRS.all = shadow_cantrs.all;
-
-                        break;                      /* exit for loop */
                     }
-                    buffer++;
-                }/* end of for loop */
-
-                /* Clear counter if no more messages */
-                if(i == 0U){
-                    CANmodule->CANtxCount = 0U;
                 }
             }
         }
+        CO_UNLOCK_CAN_SEND(CANmodule);
     }
 }
 
